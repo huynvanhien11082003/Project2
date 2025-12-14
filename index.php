@@ -1,12 +1,16 @@
-<?php require 'db.php'; ?>
+<?php 
+require 'db.php';
 
-<?php
+// PHẦN BACKEND: Xử lý thêm dữ liệu
+// Code này phải đặt trên cùng, trước khi có bất kỳ HTML nào
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['username'])) {
     $name = $_POST['username'];
     $stmt = $conn->prepare("INSERT INTO users (name) VALUES (:name)");
     $stmt->bindParam(':name', $name);
     $stmt->execute();
-    header("Location: index.php"); // Load lại trang để tránh gửi lặp
+    
+    // Chuyển trang để tránh gửi lặp form
+    header("Location: index.php"); 
     exit();
 }
 ?>
@@ -36,9 +40,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['username'])) {
     <ul>
         <?php
         // Lấy dữ liệu từ Database hiển thị ra
-        $stmt = $conn->query("SELECT * FROM users ORDER BY id DESC");
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            echo "<li>" . htmlspecialchars($row['name']) . "</li>";
+        // Kiểm tra xem biến $conn có tồn tại không trước khi query
+        if (isset($conn)) {
+            $stmt = $conn->query("SELECT * FROM users ORDER BY id DESC");
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                echo "<li>" . htmlspecialchars($row['name']) . "</li>";
+            }
         }
         ?>
     </ul>
