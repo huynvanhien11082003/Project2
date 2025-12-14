@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # Service 1: Web Server (PHP)
+  app:
+    build: .
+    ports:
+      - "8080:80"  # Truy cập bằng localhost:8080
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=project2_db
+      - DB_USER=admin
+      - DB_PASSWORD=secret
+
+  # Service 2: Database (PostgreSQL)
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=project2_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
